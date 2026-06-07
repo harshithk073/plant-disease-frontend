@@ -1,7 +1,7 @@
 // ================================
 // CONFIG
 // ================================
-const API_URL = "https://plant-disease-api-1-yr2p.onrender.com";
+const API_URL = "https://plant-disease-api-1-yr2p.onrender.com/predict";
 
 // ================================
 // ELEMENT REFERENCES
