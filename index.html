@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Plant Disease Prediction – CNN (PlantVillage)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-wrapper">
+    <header class="navbar">
+      <div class="logo">Plant<span>Guardian</span> CNN</div>
+      <nav class="nav-links">
+        <a href="#home">Overview</a>
+        <a href="#upload">Predict</a>
+        <a href="#model">Model</a>
+        <a href="#dataset">Dataset</a>
+      </nav>
+      <button class="nav-cta">PlantVillage v1</button>
+    </header>
+
+    <main>
+      <!-- Hero / Overview -->
+      <section id="home" class="hero">
+        <div class="hero-content">
+          <h1>Plant Disease Prediction using CNN</h1>
+          <p>
+            This tool uses a Convolutional Neural Network trained on the
+            PlantVillage dataset (38 disease classes across 14 crops) to
+            predict plant leaf diseases from images.
+          </p>
+          <div class="hero-actions">
+            <a href="#upload" class="primary-btn">Upload Leaf Image</a>
+            <a href="#model" class="secondary-btn">View Model Details</a>
+          </div>
+          <div class="hero-tags">
+            <span>PlantVillage</span>
+            <span>38 Classes</span>
+            <span>Adam Optimizer</span>
+            <span>Categorical Cross‑Entropy</span>
+            <span>5 Epochs • Batch 32</span>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="glow-circle"></div>
+          <div class="hero-stats-card">
+            <h3>Training Highlights</h3>
+            <ul>
+              <li><span>Optimizer:</span> Adam</li>
+              <li><span>Loss:</span> Categorical Cross‑Entropy</li>
+              <li><span>Epochs:</span> 5</li>
+              <li><span>Batch Size:</span> 32</li>
+              <li><span>Input Size:</span> 224 × 224 × 3</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Upload & Prediction -->
+      <section id="upload" class="section">
+        <h2>Run a Prediction</h2>
+        <p class="section-subtitle">
+          Upload a clear leaf image (Apple, Tomato, Grape, Potato, etc.) and see the predicted class based on the image name.
+        </p>
+
+        <div class="upload-layout">
+          <!-- Upload card -->
+          <div class="upload-card">
+            <h3>1. Upload Leaf Image</h3>
+            <p class="small-muted">
+              Supported crops include Apple, Blueberry, Cherry, Corn, Grape, Orange,
+              Peach, Bell Pepper, Potato, Raspberry, Soybean, Squash, Strawberry,
+              and Tomato.
+            </p>
+
+            <div id="drop-zone" class="drop-zone">
+              <input type="file" id="image-input" accept="image/*" hidden />
+              <div class="drop-zone-content">
+                <div class="drop-icon">🌿</div>
+                <h3>Drop plant leaf image here</h3>
+                <p>or</p>
+                <button id="browse-btn" class="primary-btn outline">
+                  Browse Files
+                </button>
+                <p class="hint">
+                  Use a single leaf in focus, good lighting, and minimal background clutter.
+                </p>
+              </div>
+            </div>
+
+            <div class="preview-wrapper">
+              <h4>Input Preview (224 × 224)</h4>
+              <div class="preview-box">
+                <img id="preview-image" src="" alt="Preview" />
+                <span id="preview-placeholder">No image selected</span>
+              </div>
+            </div>
+
+            <button id="analyze-btn" class="primary-btn full-width" disabled>
+              Analyze with CNN
+            </button>
+          </div>
+
+          <!-- Results & class info -->
+          <div class="results-column">
+            <div class="results-card">
+              <h3>2. Prediction Output</h3>
+              <div id="status-badge" class="status-badge idle">
+                Waiting for image...
+              </div>
+
+              <div class="results-content">
+                <div class="result-row">
+                  <span class="label">Predicted Class</span>
+                  <span class="value" id="result-class">–</span>
+                </div>
+                <div class="result-row">
+                  <span class="label">Crop</span>
+                  <span class="value" id="result-crop">–</span>
+                </div>
+                <div class="result-row">
+                  <span class="label">Disease</span>
+                  <span class="value" id="result-disease">–</span>
+                </div>
+                <div class="result-row">
+                  <span class="label">Model Confidence</span>
+                  <span class="value" id="result-confidence">–</span>
+                </div>
+                <div class="result-row">
+                  <span class="label">Severity (Heuristic)</span>
+                  <span class="value" id="result-severity">–</span>
+                </div>
+              </div>
+
+              <div class="recommendation">
+                <h4>Suggested Action</h4>
+                <p id="result-recommendation">
+                  Upload an image and click “Analyze with CNN” to see predicted class based on the file name.
+                </p>
+              </div>
+            </div>
+
+            <div class="class-info-card">
+              <h3>Example Class Names</h3>
+              <p class="small-muted">
+                Try saving files as:
+              </p>
+              <ul class="pill-list">
+                <li>banana_leaf.jpg</li>
+                <li>tomato_blight.png</li>
+                <li>grape_healthy.jpeg</li>
+                <li>potato_early_blight.jpg</li>
+              </ul>
+              <p class="small-muted">
+                
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Model details -->
+      <section id="model" class="section section-muted">
+        <h2>Model Architecture & Training</h2>
+        <p class="section-subtitle">
+          The backend CNN model is built using Convolutional, MaxPooling, Flatten,
+          and Dense layers, optimized with Adam and categorical cross-entropy loss.
+        </p>
+
+        <div class="about-grid">
+          <div class="about-card">
+            <h3>CNN Pipeline</h3>
+            <p>
+              The model starts with an input layer of 224 × 224 × 3, followed by
+              Conv2D layers that learn patterns like edges, spots, and textures,
+              ReLU activations for non-linearity, and MaxPooling to reduce spatial
+              size while keeping key features.
+            </p>
+          </div>
+          <div class="about-card">
+            <h3>Dense & Softmax</h3>
+            <p>
+              After flattening, Dense layers act as the decision maker, combining
+              learned features to assign probabilities to each of the 38 disease
+              classes. The Softmax output layer provides a probability distribution
+              over all classes.
+            </p>
+          </div>
+          <div class="about-card">
+            <h3>Training Setup</h3>
+            <p>
+              The model is trained with the Adam optimizer, categorical cross-entropy
+              loss, 5 epochs, and a batch size of 32, allowing efficient learning
+              over the PlantVillage dataset while keeping training stable.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dataset details -->
+      <section id="dataset" class="section">
+        <h2>PlantVillage Dataset</h2>
+        <p class="section-subtitle">
+          PlantVillage provides over 50,000 leaf images covering 38 disease classes
+          across 14 crop species such as Apple, Grape, Potato, and Tomato, with
+          both diseased and healthy leaves.
+        </p>
+
+        <div class="dataset-grid">
+          <div class="dataset-card">
+            <h3>Key Stats</h3>
+            <ul class="meta-list">
+              <li><span>Images:</span> ≈ 50k+</li>
+              <li><span>Crops:</span> 14 species</li>
+              <li><span>Classes:</span> 38 disease/healthy classes</li>
+              <li><span>Source:</span> PlantVillage</li>
+            </ul>
+          </div>
+          <div class="dataset-card">
+            <h3>Typical Classes</h3>
+            <p class="small-muted">
+              Examples: Apple Scab, Grape Black Rot, Corn Northern Leaf Blight,
+              Squash Powdery Mildew, Strawberry Leaf Scorch, Tomato Target Spot,
+              Tomato Mosaic Virus, and multiple “healthy” classes.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>
+        © 2025 PlantGuardian CNN • Plant disease prediction using CNN and the PlantVillage dataset.
+      </p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
